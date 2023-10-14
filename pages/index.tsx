@@ -41,13 +41,15 @@ const StyledWrapper = styled.div`
 `;
 
 const Home: NextPage = () => {
-  const [user] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
 
   return (
     <>
       <Head>
         <title>Xet Pasta - Mì ý phô mai</title>
       </Head>
+
+      {loading && <AppLoading />}
 
       {user?.email === "xet.host@gmail.com" && <HostView />}
       {user?.email === "xet.service@gmail.com" && <UserView />}
