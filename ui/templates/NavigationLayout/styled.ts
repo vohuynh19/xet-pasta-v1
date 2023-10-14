@@ -14,6 +14,7 @@ export const StyledContent = styled(Content)`
 
     .container {
       max-width: 767px;
+      width: 100%;
       height: 100vh !important;
       background-color: ${({ theme }) => theme.colors.white} !important;
       overflow-y: auto;
