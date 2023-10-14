@@ -1,0 +1,14 @@
+import { REACT_QUERY_ACTION_KEYS, REACT_QUERY_FILTER_KEYS } from "./common";
+
+const key = "INSTRUCTOR";
+
+const INSTRUCTOR_KEYS = {
+  GET_INSTRUCTORS: [
+    key,
+    REACT_QUERY_ACTION_KEYS.GET,
+    REACT_QUERY_FILTER_KEYS.GET_LIST,
+  ],
+  GET_INSTRUCTOR: (id: string) => [key, REACT_QUERY_ACTION_KEYS.GET, id],
+};
+
+export default INSTRUCTOR_KEYS;

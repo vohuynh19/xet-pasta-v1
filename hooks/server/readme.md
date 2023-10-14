@@ -1,0 +1,1 @@
+This folder is to handle requesting api and store server data.
