@@ -1,5 +1,5 @@
-import {PaymentMethod} from '~modules/payment';
-import {Demographic, MainDish, OrderStatus} from './types';
+import { PaymentMethod } from "../payment";
+import { Demographic, MainDish, OrderStatus } from "./types";
 
 export type OrderSchema = {
   id?: string;
