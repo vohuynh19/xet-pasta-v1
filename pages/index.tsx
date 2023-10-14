@@ -49,12 +49,10 @@ const Home: NextPage = () => {
         <title>Xet Pasta - Mì ý phô mai</title>
       </Head>
 
-      {loading && <AppLoading />}
-
       {user?.email === "xet.host@gmail.com" && <HostView />}
       {user?.email === "xet.service@gmail.com" && <UserView />}
 
-      {!user?.email && <AuthView />}
+      {!user?.email ? loading ? <AppLoading /> : <AuthView /> : null}
     </>
   );
 };
