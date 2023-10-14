@@ -10,6 +10,7 @@ export const queryClientInstance = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: Infinity,
+      refetchOnWindowFocus: "always",
     },
   },
 });
