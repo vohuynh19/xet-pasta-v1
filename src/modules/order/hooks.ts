@@ -132,7 +132,7 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
               );
 
               return (
-                nowDate.diff(orderDate, "day") === 1 &&
+                nowDate.diff(orderDate, "day") === 0 &&
                 maxTime.isAfter(orderTime) &&
                 order.status === "DONE"
               );
@@ -152,6 +152,8 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
                 } as OrderSchema)
             )
             .filter((order) => {
+              console.log("order", order);
+
               const orderDate = moment(
                 moment(order.createdAt).format("YYYY-MM-DD")
               );
@@ -166,7 +168,7 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
               );
 
               return (
-                nowDate.diff(orderDate, "day") === 1 &&
+                nowDate.diff(orderDate, "day") === 0 &&
                 minTime.isBefore(orderTime) &&
                 maxTime.isAfter(orderTime) &&
                 order.status === "DONE"

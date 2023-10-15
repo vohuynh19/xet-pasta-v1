@@ -1,4 +1,4 @@
-import { Divider } from "antd";
+import { Divider, message } from "antd";
 import { useState } from "react";
 import { Bar, Pie } from "react-chartjs-2";
 import {
@@ -23,6 +23,9 @@ import {
   Legend,
   ArcElement,
 } from "chart.js";
+import { Logout } from "@mui/icons-material";
+import { signOut } from "firebase/auth";
+import { auth } from "src/infra/firebase";
 
 ChartJS.register(
   CategoryScale,
@@ -183,12 +186,26 @@ const HostView = () => {
     console.log("onOk: ", value);
   };
 
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      message.success("Đăng xuất thành công");
+    } catch (error) {
+      message.error("Có lỗi xảy ra");
+    }
+  };
+
   return (
     <div
       style={{
         padding: 16,
       }}
     >
+      <div style={{ marginBottom: 8 }}>
+        <span onClick={logout}>
+          <Logout />
+        </span>
+      </div>
       {/* <RangePicker
         size="large"
         showTime={{ format: "HH:mm" }}
