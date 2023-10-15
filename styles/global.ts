@@ -42,4 +42,11 @@ export const GlobalStyled = createGlobalStyle`
   .text-contrast-secondary{
     color: ${({ theme }) => theme.colors.contrastText} !important
   }
+
+  @media (max-width: 480px) {
+    .ant-picker-panels{
+      max-width: 320px;
+      overflow:auto;
+    } 
+  }
 `;

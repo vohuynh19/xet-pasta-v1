@@ -12,6 +12,7 @@ import {
   orderBy,
   query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import {
   firestoreIns,
@@ -28,6 +29,11 @@ type OrderFilterType =
   | "ALL_DONE_EVENING";
 
 export const getOrderQueryKey = (type: OrderFilterType) => ["order", type];
+export const getOrderFilterQueryKey = (
+  type: OrderFilterType,
+  startDate: string,
+  endDate: string
+) => ["order", type, startDate, endDate];
 
 const createOrder = ({
   dishes,
@@ -104,7 +110,7 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
 
       case "ALL_DONE_MORNING":
         return getDocs(
-          query(orderCollection, orderBy("createdAt", "desc"), limit(1000))
+          query(orderCollection, orderBy("createdAt", "desc"), limit(50))
         ).then((data) => {
           return data.docs
             .map(
@@ -126,7 +132,7 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
               );
 
               return (
-                nowDate.diff(orderDate, "day") === 0 &&
+                nowDate.diff(orderDate, "day") === 1 &&
                 maxTime.isAfter(orderTime) &&
                 order.status === "DONE"
               );
@@ -135,7 +141,7 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
 
       case "ALL_DONE_EVENING":
         return getDocs(
-          query(orderCollection, orderBy("createdAt", "desc"), limit(1000))
+          query(orderCollection, orderBy("createdAt", "desc"), limit(50))
         ).then((data) => {
           return data.docs
             .map(
@@ -160,7 +166,7 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
               );
 
               return (
-                nowDate.diff(orderDate, "day") === 0 &&
+                nowDate.diff(orderDate, "day") === 1 &&
                 minTime.isBefore(orderTime) &&
                 maxTime.isAfter(orderTime) &&
                 order.status === "DONE"
@@ -170,7 +176,7 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
 
       case "ALL_DONE_TODAY":
         return getDocs(
-          query(orderCollection, orderBy("createdAt", "desc"), limit(1000))
+          query(orderCollection, orderBy("createdAt", "desc"), limit(50))
         ).then((data) => {
           return data.docs
             .map(
@@ -194,7 +200,7 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
 
       case "ALL":
         return getDocs(
-          query(orderCollection, orderBy("createdAt", "desc"), limit(1000))
+          query(orderCollection, orderBy("createdAt", "desc"), limit(50))
         ).then((data) => {
           return data.docs.map(
             (val) =>
@@ -213,6 +219,118 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryFn: request,
     queryKey: getOrderQueryKey(type),
+    enabled: fetchOnMount,
+  });
+
+  return {
+    orders: data,
+    isLoading,
+    error,
+    refetch,
+  };
+};
+
+export const useOrdersFilter = (
+  type: OrderFilterType,
+  startDate: string,
+  endDate: string,
+  fetchOnMount = true
+) => {
+  const request = async () => {
+    switch (type) {
+      case "ALL_DONE_MORNING":
+        return getDocs(
+          query(
+            orderCollection,
+            // orderBy("createdAt", "desc"),
+            // where("createdAt", "<=", endDate),
+            // where("createdAt", ">=", startDate),
+            limit(50)
+          )
+        ).then((data) => {
+          return data.docs
+            .map(
+              (val) =>
+                ({
+                  ...val.data(),
+                  id: val.id,
+                } as OrderSchema)
+            )
+            .filter((order) => {
+              const orderTime = moment(order.createdAt);
+              const maxTime = moment(
+                `${moment(order.createdAt).format("YYYY-MM-DD")} 11:00`
+              );
+              return maxTime.isAfter(orderTime) && order.status === "DONE";
+            });
+        });
+
+      case "ALL_DONE_EVENING":
+        return getDocs(
+          query(
+            orderCollection,
+            // orderBy("createdAt", "desc"),
+            // where("createdAt", "<=", endDate),
+            // where("createdAt", ">=", startDate),
+            limit(50)
+          )
+        ).then((data) => {
+          return data.docs
+            .map(
+              (val) =>
+                ({
+                  ...val.data(),
+                  id: val.id,
+                } as OrderSchema)
+            )
+            .filter((order) => {
+              const minTime = moment(
+                `${moment(order.createdAt).format("YYYY-MM-DD")} 15:00`
+              );
+              const orderTime = moment(order.createdAt);
+              const maxTime = moment(
+                `${moment(order.createdAt).format("YYYY-MM-DD")} 23:00`
+              );
+
+              return (
+                minTime.isBefore(orderTime) &&
+                maxTime.isAfter(orderTime) &&
+                order.status === "DONE"
+              );
+            });
+        });
+
+      case "ALL_DONE_TODAY":
+        return getDocs(
+          query(
+            orderCollection,
+            // orderBy("createdAt", "desc"),
+            // where("createdAt", "<=", endDate),
+            // where("createdAt", ">=", startDate),
+            limit(50)
+          )
+        ).then((data) => {
+          return data.docs
+            .map(
+              (val) =>
+                ({
+                  ...val.data(),
+                  id: val.id,
+                } as OrderSchema)
+            )
+            .filter((order) => {
+              return order.status === "DONE";
+            });
+        });
+
+      default:
+        throw Error("Not supported");
+    }
+  };
+
+  const { data, isLoading, error, refetch } = useQuery({
+    queryFn: request,
+    queryKey: getOrderFilterQueryKey(type, startDate, endDate),
     enabled: fetchOnMount,
   });
 
