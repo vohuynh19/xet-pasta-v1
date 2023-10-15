@@ -41,7 +41,7 @@ const StyledWrapper = styled.div`
 `;
 
 const Home: NextPage = () => {
-  const [user, loading] = useAuthState(auth);
+  const [user] = useAuthState(auth);
 
   return (
     <>
