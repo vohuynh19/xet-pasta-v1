@@ -110,7 +110,7 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
 
       case "ALL_DONE_MORNING":
         return getDocs(
-          query(orderCollection, orderBy("createdAt", "desc"), limit(50))
+          query(orderCollection, orderBy("createdAt", "desc"), limit(200))
         ).then((data) => {
           return data.docs
             .map(
@@ -141,7 +141,7 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
 
       case "ALL_DONE_EVENING":
         return getDocs(
-          query(orderCollection, orderBy("createdAt", "desc"), limit(50))
+          query(orderCollection, orderBy("createdAt", "desc"), limit(200))
         ).then((data) => {
           return data.docs
             .map(
@@ -176,7 +176,7 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
 
       case "ALL_DONE_TODAY":
         return getDocs(
-          query(orderCollection, orderBy("createdAt", "desc"), limit(50))
+          query(orderCollection, orderBy("createdAt", "desc"), limit(200))
         ).then((data) => {
           return data.docs
             .map(
@@ -200,7 +200,7 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
 
       case "ALL":
         return getDocs(
-          query(orderCollection, orderBy("createdAt", "desc"), limit(50))
+          query(orderCollection, orderBy("createdAt", "desc"), limit(200))
         ).then((data) => {
           return data.docs.map(
             (val) =>
@@ -245,7 +245,7 @@ export const useOrdersFilter = (
             // orderBy("createdAt", "desc"),
             // where("createdAt", "<=", endDate),
             // where("createdAt", ">=", startDate),
-            limit(50)
+            limit(200)
           )
         ).then((data) => {
           return data.docs
@@ -272,7 +272,7 @@ export const useOrdersFilter = (
             // orderBy("createdAt", "desc"),
             // where("createdAt", "<=", endDate),
             // where("createdAt", ">=", startDate),
-            limit(50)
+            limit(200)
           )
         ).then((data) => {
           return data.docs
@@ -307,7 +307,7 @@ export const useOrdersFilter = (
             // orderBy("createdAt", "desc"),
             // where("createdAt", "<=", endDate),
             // where("createdAt", ">=", startDate),
-            limit(50)
+            limit(200)
           )
         ).then((data) => {
           return data.docs
