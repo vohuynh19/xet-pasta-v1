@@ -52,7 +52,7 @@ const Home: NextPage = () => {
       {user?.email === "xet.host@gmail.com" && <HostView />}
       {user?.email === "xet.service@gmail.com" && <UserView />}
 
-      {!user?.email ? loading ? <AppLoading /> : <AuthView /> : null}
+      {!user?.email && <AuthView />}
     </>
   );
 };
