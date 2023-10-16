@@ -53,8 +53,22 @@ const HostView = () => {
 
   //
   // Total receive &  Total revenue chart
-  const total = (orders || []).reduce((prev, current) => {
+  // const total = (orders || []).reduce((prev, current) => {
+  //   return (prev = prev + current.totalPrice);
+  // }, 0);
+
+  const totalCash = (orders || []).reduce((prev, current) => {
+    if (current.paymentMethod !== "cash") {
+      return prev;
+    }
     return (prev = prev + current.totalPrice);
+  }, 0);
+
+  const totalOnline = (orders || []).reduce((prev, current) => {
+    if (current.paymentMethod !== "cash") {
+      return (prev = prev + current.totalPrice);
+    }
+    return prev;
   }, 0);
 
   // Maindish
@@ -295,7 +309,13 @@ const HostView = () => {
           justifyContent: "space-between",
         }}
       >
-        <div style={{ flex: 1, fontSize: 18 }}>Doanh thu: {total}k</div>
+        <div style={{ flex: 1, fontSize: 18 }}>
+          Doanh thu tiền mặt: {totalCash}k
+        </div>
+
+        <div style={{ flex: 1, fontSize: 18 }}>
+          Doanh thu tiền bank: {totalOnline}k
+        </div>
 
         <div style={{ flex: 1, fontSize: 18 }}>
           Số phần:{" "}
