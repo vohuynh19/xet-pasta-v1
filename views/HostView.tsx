@@ -309,13 +309,9 @@ const HostView = () => {
           justifyContent: "space-between",
         }}
       >
-        <div style={{ flex: 1, fontSize: 18 }}>
-          Doanh thu tiền mặt: {totalCash}k
-        </div>
+        <div style={{ flex: 1, fontSize: 18 }}>Tiền mặt: {totalCash}k</div>
 
-        <div style={{ flex: 1, fontSize: 18 }}>
-          Doanh thu tiền bank: {totalOnline}k
-        </div>
+        <div style={{ flex: 1, fontSize: 18 }}>Tiền bank: {totalOnline}k</div>
 
         <div style={{ flex: 1, fontSize: 18 }}>
           Số phần:{" "}
