@@ -135,7 +135,7 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
                 nowDate.diff(orderDate, "day") === 0 &&
                 maxTime.isAfter(orderTime) &&
                 order.status === "DONE" &&
-                order.paymentMethod !== "banking"
+                order.paymentMethod === "cash"
               );
             });
         });
@@ -173,7 +173,7 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
                 minTime.isBefore(orderTime) &&
                 maxTime.isAfter(orderTime) &&
                 order.status === "DONE" &&
-                order.paymentMethod !== "banking"
+                order.paymentMethod === "cash"
               );
             });
         });
@@ -199,7 +199,7 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
               return (
                 nowDate.diff(orderDate, "day") === 0 &&
                 order.status === "DONE" &&
-                order.paymentMethod !== "banking"
+                order.paymentMethod === "cash"
               );
             });
         });
@@ -270,7 +270,7 @@ export const useOrdersFilter = (
               return (
                 maxTime.isAfter(orderTime) &&
                 order.status === "DONE" &&
-                order.paymentMethod !== "banking"
+                order.paymentMethod === "cash"
               );
             });
         });
@@ -306,7 +306,7 @@ export const useOrdersFilter = (
                 minTime.isBefore(orderTime) &&
                 maxTime.isAfter(orderTime) &&
                 order.status === "DONE" &&
-                order.paymentMethod !== "banking"
+                order.paymentMethod === "cash"
               );
             });
         });
@@ -330,9 +330,7 @@ export const useOrdersFilter = (
                 } as OrderSchema)
             )
             .filter((order) => {
-              return (
-                order.status === "DONE" && order.paymentMethod !== "banking"
-              );
+              return order.status === "DONE" && order.paymentMethod === "cash";
             });
         });
 
