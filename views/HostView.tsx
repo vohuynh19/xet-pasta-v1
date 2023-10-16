@@ -194,6 +194,28 @@ const HostView = () => {
       message.error("Có lỗi xảy ra");
     }
   };
+  // const totalWeight = () => {
+  //   // TODO: Add unit price
+  //   const mi =
+  //     totalMainDishes.xet_truyen_thong_M +
+  //     totalMainDishes.xet_truyen_thong_L +
+  //     totalMainDishes.xet_tan_chay_M +
+  //     totalMainDishes.xet_tan_chay_L;
+  //   const sot =
+  //     totalMainDishes.xet_truyen_thong_M +
+  //     totalMainDishes.xet_truyen_thong_L +
+  //     totalMainDishes.xet_tan_chay_M +
+  //     totalMainDishes.xet_tan_chay_L;
+
+  //   const xuc_xich = totalTopping.xuc_xich;
+  //   const pho_mai_lat =
+  //     totalMainDishes.xet_truyen_thong_M * +totalMainDishes.xet_truyen_thong_L +
+  //     totalTopping.pho_mai_lat;
+  //   const pho_mai_soi =
+  //     totalMainDishes.xet_tan_chay_M * +totalMainDishes.xet_tan_chay_L +
+  //     totalTopping.pho_mai_soi;
+  //   const ga_popcorn = totalTopping.ga_popcorn;
+  // };
 
   return (
     <div

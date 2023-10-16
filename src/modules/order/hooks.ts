@@ -134,7 +134,8 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
               return (
                 nowDate.diff(orderDate, "day") === 0 &&
                 maxTime.isAfter(orderTime) &&
-                order.status === "DONE"
+                order.status === "DONE" &&
+                order.paymentMethod !== "banking"
               );
             });
         });
@@ -171,7 +172,8 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
                 nowDate.diff(orderDate, "day") === 0 &&
                 minTime.isBefore(orderTime) &&
                 maxTime.isAfter(orderTime) &&
-                order.status === "DONE"
+                order.status === "DONE" &&
+                order.paymentMethod !== "banking"
               );
             });
         });
@@ -195,7 +197,9 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
               const nowDate = moment(moment().format("YYYY-MM-DD"));
 
               return (
-                nowDate.diff(orderDate, "day") === 0 && order.status === "DONE"
+                nowDate.diff(orderDate, "day") === 0 &&
+                order.status === "DONE" &&
+                order.paymentMethod !== "banking"
               );
             });
         });
@@ -263,7 +267,11 @@ export const useOrdersFilter = (
               const maxTime = moment(
                 `${moment(order.createdAt).format("YYYY-MM-DD")} 11:00`
               );
-              return maxTime.isAfter(orderTime) && order.status === "DONE";
+              return (
+                maxTime.isAfter(orderTime) &&
+                order.status === "DONE" &&
+                order.paymentMethod !== "banking"
+              );
             });
         });
 
@@ -297,7 +305,8 @@ export const useOrdersFilter = (
               return (
                 minTime.isBefore(orderTime) &&
                 maxTime.isAfter(orderTime) &&
-                order.status === "DONE"
+                order.status === "DONE" &&
+                order.paymentMethod !== "banking"
               );
             });
         });
@@ -321,7 +330,9 @@ export const useOrdersFilter = (
                 } as OrderSchema)
             )
             .filter((order) => {
-              return order.status === "DONE";
+              return (
+                order.status === "DONE" && order.paymentMethod !== "banking"
+              );
             });
         });
 
