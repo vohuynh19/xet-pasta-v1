@@ -1,5 +1,5 @@
 import { Divider, message } from "antd";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Bar, Pie } from "react-chartjs-2";
 import {
   Demographic,
@@ -208,28 +208,42 @@ const HostView = () => {
       message.error("Có lỗi xảy ra");
     }
   };
-  // const totalWeight = () => {
-  //   // TODO: Add unit price
-  //   const mi =
-  //     totalMainDishes.xet_truyen_thong_M +
-  //     totalMainDishes.xet_truyen_thong_L +
-  //     totalMainDishes.xet_tan_chay_M +
-  //     totalMainDishes.xet_tan_chay_L;
-  //   const sot =
-  //     totalMainDishes.xet_truyen_thong_M +
-  //     totalMainDishes.xet_truyen_thong_L +
-  //     totalMainDishes.xet_tan_chay_M +
-  //     totalMainDishes.xet_tan_chay_L;
+  const totalWeight = useMemo(() => {
+    // TODO: Add unit gram
+    const mi =
+      totalMainDishes.xet_truyen_thong_M * 160 +
+      totalMainDishes.xet_truyen_thong_L * 200 +
+      totalMainDishes.xet_tan_chay_M * 160 +
+      totalMainDishes.xet_tan_chay_L * 200;
+    const sot =
+      totalMainDishes.xet_truyen_thong_M * 90 +
+      totalMainDishes.xet_truyen_thong_L * 110 +
+      totalMainDishes.xet_tan_chay_M * 90 +
+      totalMainDishes.xet_tan_chay_L * 110;
 
-  //   const xuc_xich = totalTopping.xuc_xich;
-  //   const pho_mai_lat =
-  //     totalMainDishes.xet_truyen_thong_M * +totalMainDishes.xet_truyen_thong_L +
-  //     totalTopping.pho_mai_lat;
-  //   const pho_mai_soi =
-  //     totalMainDishes.xet_tan_chay_M * +totalMainDishes.xet_tan_chay_L +
-  //     totalTopping.pho_mai_soi;
-  //   const ga_popcorn = totalTopping.ga_popcorn;
-  // };
+    const xuc_xich = totalTopping.xuc_xich;
+    const pho_mai_lat =
+      (totalMainDishes.xet_truyen_thong_M +
+        totalMainDishes.xet_truyen_thong_L +
+        totalTopping.pho_mai_lat) *
+      4.1;
+    const pho_mai_soi =
+      totalMainDishes.xet_tan_chay_M *
+        15 *
+        +totalMainDishes.xet_tan_chay_L *
+        15 +
+      totalTopping.pho_mai_soi * 10;
+    const ga_popcorn = totalTopping.ga_popcorn * 24;
+
+    return {
+      mi,
+      sot,
+      xuc_xich,
+      pho_mai_lat,
+      pho_mai_soi,
+      ga_popcorn,
+    };
+  }, [totalMainDishes, totalTopping]);
 
   return (
     <div
@@ -309,16 +323,56 @@ const HostView = () => {
           justifyContent: "space-between",
         }}
       >
-        <div style={{ flex: 1, fontSize: 18 }}>Tiền mặt: {totalCash}k</div>
-
-        <div style={{ flex: 1, fontSize: 18 }}>Tiền bank: {totalOnline}k</div>
-
         <div style={{ flex: 1, fontSize: 18 }}>
           Số phần:{" "}
           {totalMainDishes.xet_truyen_thong_M +
             totalMainDishes.xet_truyen_thong_L +
             totalMainDishes.xet_tan_chay_M +
             totalMainDishes.xet_tan_chay_L}
+        </div>
+
+        <div style={{ flex: 1, fontSize: 18 }}>Tiền mặt: {totalCash}k</div>
+
+        <div style={{ flex: 1, fontSize: 18 }}>Tiền bank: {totalOnline}k</div>
+      </div>
+
+      <Divider />
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: 16,
+        }}
+      >
+        <div style={{ flex: 1, fontSize: 16 }}>Mì: {totalWeight.mi} g</div>
+        <div style={{ flex: 1, fontSize: 16 }}>Sốt: {totalWeight.sot} g</div>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: 16,
+        }}
+      >
+        <div style={{ flex: 1, fontSize: 16 }}>
+          Phô mai lát: {totalWeight.pho_mai_lat} g
+        </div>
+        <div style={{ flex: 1, fontSize: 16 }}>
+          Phô mai sợi: {totalWeight.pho_mai_soi} g
+        </div>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <div style={{ flex: 1, fontSize: 16 }}>
+          Xúc xích: {totalWeight.xuc_xich} g
+        </div>
+        <div style={{ flex: 1, fontSize: 16 }}>
+          Gà popcorn: {totalWeight.ga_popcorn} g
         </div>
       </div>
 
