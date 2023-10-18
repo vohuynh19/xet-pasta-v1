@@ -221,7 +221,7 @@ const HostView = () => {
       totalMainDishes.xet_tan_chay_M * 90 +
       totalMainDishes.xet_tan_chay_L * 110;
 
-    const xuc_xich = totalTopping.xuc_xich;
+    const xuc_xich = totalTopping.xuc_xich * 25;
     const pho_mai_lat =
       (totalMainDishes.xet_truyen_thong_M +
         totalMainDishes.xet_truyen_thong_L +
