@@ -228,10 +228,8 @@ const HostView = () => {
         totalTopping.pho_mai_lat) *
       4.1;
     const pho_mai_soi =
-      totalMainDishes.xet_tan_chay_M *
-        15 *
-        +totalMainDishes.xet_tan_chay_L *
-        15 +
+      totalMainDishes.xet_tan_chay_M * 15 +
+      +totalMainDishes.xet_tan_chay_L * 15 +
       totalTopping.pho_mai_soi * 10;
     const ga_popcorn = totalTopping.ga_popcorn * 24;
 
