@@ -1,13 +1,19 @@
 export type ToppingName =
-  | 'xuc_xich'
-  | 'pho_mai_lat'
-  | 'pho_mai_soi'
-  | 'xa_lach'
-  | 'ga_popcorn';
+  | "xuc_xich"
+  | "pho_mai_lat"
+  | "pho_mai_soi"
+  | "xa_lach"
+  | "ga_popcorn";
 
-export type MainDishName = 'xet_truyen_thong' | 'xet_tan_chay' | 'none';
+export type MainDishName =
+  | "xet_truyen_thong"
+  | "xet_tan_chay"
+  | "none"
+  | EventDish;
 
-export type MainDishSize = 'M' | 'L';
+export type EventDish = "xet_ai_cap" | "xet_nhen_nhen" | "xet_zombie";
+
+export type MainDishSize = "M" | "L";
 
 export type ToppingRecord = Record<ToppingName, number>;
 
@@ -28,6 +34,6 @@ export type Order = {
   createdAt: string;
 };
 
-export type Demographic = 'kid' | 'cap_1' | 'cap_2' | 'cap_3' | '20-30' | '>30';
+export type Demographic = "kid" | "cap_1" | "cap_2" | "cap_3" | "20-30" | ">30";
 
-export type OrderStatus = 'CREATED' | 'PROCESSING' | 'DONE' | 'DELETED';
+export type OrderStatus = "CREATED" | "PROCESSING" | "DONE" | "DELETED";

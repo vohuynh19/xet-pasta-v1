@@ -91,6 +91,15 @@ const HostView = () => {
             xet_tan_chay_L:
               p.xet_tan_chay_L +
               (c.size === "L" && c.name === "xet_tan_chay" ? c.amount : 0),
+            xet_ai_cap:
+              p.xet_ai_cap +
+              (c.size === "M" && c.name === "xet_ai_cap" ? c.amount : 0),
+            xet_nhen_nhen:
+              p.xet_nhen_nhen +
+              (c.size === "M" && c.name === "xet_nhen_nhen" ? c.amount : 0),
+            xet_zombie:
+              p.xet_zombie +
+              (c.size === "M" && c.name === "xet_zombie" ? c.amount : 0),
           };
         },
         {
@@ -98,6 +107,9 @@ const HostView = () => {
           xet_truyen_thong_L: 0,
           xet_tan_chay_M: 0,
           xet_tan_chay_L: 0,
+          xet_ai_cap: 0,
+          xet_nhen_nhen: 0,
+          xet_zombie: 0,
         }
       );
       return {
@@ -107,6 +119,9 @@ const HostView = () => {
           prev.xet_truyen_thong_L + singleData.xet_truyen_thong_L,
         xet_tan_chay_M: prev.xet_tan_chay_M + singleData.xet_tan_chay_M,
         xet_tan_chay_L: prev.xet_tan_chay_L + singleData.xet_tan_chay_L,
+        xet_ai_cap: prev.xet_ai_cap + singleData.xet_ai_cap,
+        xet_nhen_nhen: prev.xet_nhen_nhen + singleData.xet_nhen_nhen,
+        xet_zombie: prev.xet_zombie + singleData.xet_zombie,
       };
     },
     {
@@ -114,6 +129,9 @@ const HostView = () => {
       xet_truyen_thong_L: 0,
       xet_tan_chay_M: 0,
       xet_tan_chay_L: 0,
+      xet_ai_cap: 0,
+      xet_nhen_nhen: 0,
+      xet_zombie: 0,
     }
   );
 
@@ -214,12 +232,16 @@ const HostView = () => {
       totalMainDishes.xet_truyen_thong_M * 160 +
       totalMainDishes.xet_truyen_thong_L * 200 +
       totalMainDishes.xet_tan_chay_M * 160 +
-      totalMainDishes.xet_tan_chay_L * 200;
+      totalMainDishes.xet_tan_chay_L * 200 +
+      totalMainDishes.xet_nhen_nhen * 200 +
+      totalMainDishes.xet_ai_cap * 200;
     const sot =
       totalMainDishes.xet_truyen_thong_M * 90 +
       totalMainDishes.xet_truyen_thong_L * 110 +
       totalMainDishes.xet_tan_chay_M * 90 +
-      totalMainDishes.xet_tan_chay_L * 110;
+      totalMainDishes.xet_tan_chay_L * 110 +
+      totalMainDishes.xet_nhen_nhen * 110 +
+      totalMainDishes.xet_ai_cap * 110;
 
     const xuc_xich = totalTopping.xuc_xich * 25;
     const pho_mai_lat =
@@ -319,16 +341,31 @@ const HostView = () => {
         style={{
           display: "flex",
           justifyContent: "space-between",
+          marginBottom: 8,
         }}
       >
         <div style={{ flex: 1, fontSize: 18 }}>
-          Số phần:{" "}
+          Phần thường:{" "}
           {totalMainDishes.xet_truyen_thong_M +
             totalMainDishes.xet_truyen_thong_L +
             totalMainDishes.xet_tan_chay_M +
             totalMainDishes.xet_tan_chay_L}
         </div>
 
+        <div style={{ flex: 1, fontSize: 18 }}>
+          Phần Halloween:{" "}
+          {totalMainDishes.xet_nhen_nhen +
+            totalMainDishes.xet_ai_cap +
+            totalMainDishes.xet_zombie}
+        </div>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
         <div style={{ flex: 1, fontSize: 18 }}>Tiền mặt: {totalCash}k</div>
 
         <div style={{ flex: 1, fontSize: 18 }}>Tiền bank: {totalOnline}k</div>
@@ -389,6 +426,27 @@ const HostView = () => {
                   totalMainDishes.xet_truyen_thong_L,
                   totalMainDishes.xet_tan_chay_M,
                   totalMainDishes.xet_tan_chay_L,
+                ],
+              },
+            ],
+          }}
+        />
+      </div>
+
+      <Divider />
+
+      <div>
+        <h2>Doanh số halloween:</h2>
+        <Bar
+          data={{
+            labels: ["Zombie", "Ai Cập", "Nhện"],
+            datasets: [
+              {
+                label: "Phần",
+                data: [
+                  totalMainDishes.xet_zombie,
+                  totalMainDishes.xet_ai_cap,
+                  totalMainDishes.xet_nhen_nhen,
                 ],
               },
             ],
