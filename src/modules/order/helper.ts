@@ -1,39 +1,45 @@
-import {mainDishPriceTable, toppingPriceTable} from './const';
+import { mainDishPriceTable, toppingPriceTable } from "./const";
 import {
   Demographic,
   MainDish,
   MainDishName,
   ToppingName,
   ToppingRecord,
-} from './types';
+} from "./types";
 
 export const getMainDishName = (name: MainDishName) => {
   switch (name) {
-    case 'xet_tan_chay':
-      return 'XET. Tan Chảy';
-    case 'xet_truyen_thong':
-      return 'XET. Truyền thống';
-    case 'none':
-      return '';
+    case "xet_tan_chay":
+      return "XET. Tan Chảy";
+    case "xet_truyen_thong":
+      return "XET. Truyền thống";
+    case "none":
+      return "";
+    case "xet_ai_cap":
+      return "XET. Ai Cập";
+    case "xet_nhen_nhen":
+      return "XET. Nhền Nhện";
+    case "xet_zombie":
+      return "XET. Zombie";
     default:
-      return 'ERROR';
+      return "Chưa có tên";
   }
 };
 
 export const getToppingName = (name: ToppingName) => {
   switch (name) {
-    case 'xuc_xich':
-      return 'Xúc xích';
-    case 'pho_mai_lat':
-      return 'Phô mai lát';
-    case 'pho_mai_soi':
-      return 'Phô mai sợi';
-    case 'ga_popcorn':
-      return 'Gà popcorn';
-    case 'xa_lach':
-      return 'Xà lách';
+    case "xuc_xich":
+      return "Xúc xích";
+    case "pho_mai_lat":
+      return "Phô mai lát";
+    case "pho_mai_soi":
+      return "Phô mai sợi";
+    case "ga_popcorn":
+      return "Gà popcorn";
+    case "xa_lach":
+      return "Xà lách";
     default:
-      return 'ERROR';
+      return "ERROR";
   }
 };
 
@@ -42,13 +48,13 @@ export const minifyDish = (dishList: MainDish[]) => {
 
   for (const dish of dishList) {
     const key = `${dish.name}_${JSON.stringify(dish.toppings)}_${JSON.stringify(
-      dish.size,
+      dish.size
     )}`;
 
     if (dishMap[key]) {
       dishMap[key].amount += dish.amount;
     } else {
-      dishMap[key] = {...dish};
+      dishMap[key] = { ...dish };
     }
   }
   return Object.values(dishMap);
@@ -56,7 +62,7 @@ export const minifyDish = (dishList: MainDish[]) => {
 
 export const getTopping = (dish: MainDish) => {
   if (!dish.toppings) {
-    return '';
+    return "";
   }
 
   const toppingKeys = dish.toppings
@@ -71,7 +77,7 @@ export const getTopping = (dish: MainDish) => {
     }
 
     return amount ? `${prev} | ${amount} ${getToppingName(key)}` : prev;
-  }, '');
+  }, "");
 };
 
 export const getDishUnitPrice = (dish: MainDish) => {
@@ -93,18 +99,18 @@ export const getDishTotalPrice = (dish: MainDish) =>
 
 export const getDemographicName = (demographic: Demographic) => {
   switch (demographic) {
-    case 'cap_1':
-      return 'Cấp 1';
-    case 'cap_2':
-      return 'Cấp 2';
-    case 'cap_3':
-      return 'Cấp 3';
-    case 'kid':
-      return 'Trẻ em';
-    case '20-30':
-      return '20-30 Tuổi';
-    case '>30':
-      return '>30 Tuổi';
+    case "cap_1":
+      return "Cấp 1";
+    case "cap_2":
+      return "Cấp 2";
+    case "cap_3":
+      return "Cấp 3";
+    case "kid":
+      return "Trẻ em";
+    case "20-30":
+      return "20-30 Tuổi";
+    case ">30":
+      return ">30 Tuổi";
 
     default:
       break;
@@ -118,11 +124,11 @@ export const isToppingRecordSelected = (toppingRecord: ToppingRecord) => {
 };
 
 export const getDishNameInInvoice = (dish: MainDish) => {
-  if (dish.name === 'none') {
+  if (dish.name === "none") {
     return getTopping(dish);
   }
 
   return `${getMainDishName(dish.name)} size ${dish.size} | ${getTopping(
-    dish,
+    dish
   )}`;
 };
