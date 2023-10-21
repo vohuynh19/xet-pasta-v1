@@ -240,6 +240,7 @@ const HostView = () => {
       totalMainDishes.xet_truyen_thong_L * 110 +
       totalMainDishes.xet_tan_chay_M * 90 +
       totalMainDishes.xet_tan_chay_L * 110 +
+      totalMainDishes.xet_zombie * 90 +
       totalMainDishes.xet_nhen_nhen * 110 +
       totalMainDishes.xet_ai_cap * 110;
 
@@ -247,13 +248,24 @@ const HostView = () => {
     const pho_mai_lat =
       (totalMainDishes.xet_truyen_thong_M +
         totalMainDishes.xet_truyen_thong_L +
-        totalTopping.pho_mai_lat) *
+        totalTopping.pho_mai_lat +
+        totalMainDishes.xet_zombie * 2 +
+        totalMainDishes.xet_nhen_nhen +
+        totalMainDishes.xet_ai_cap) *
       4.1;
     const pho_mai_soi =
       totalMainDishes.xet_tan_chay_M * 15 +
       +totalMainDishes.xet_tan_chay_L * 15 +
       totalTopping.pho_mai_soi * 10;
     const ga_popcorn = totalTopping.ga_popcorn * 24;
+
+    const mi_gao_lut = totalMainDishes.xet_zombie * 160;
+
+    const ga_vong = totalMainDishes.xet_zombie * 2;
+
+    const nhen_den = totalMainDishes.xet_nhen_nhen * 5;
+
+    const xuc_xich_zombie = totalMainDishes.xet_ai_cap * 2;
 
     return {
       mi,
@@ -262,6 +274,10 @@ const HostView = () => {
       pho_mai_lat,
       pho_mai_soi,
       ga_popcorn,
+      mi_gao_lut,
+      ga_vong,
+      nhen_den,
+      xuc_xich_zombie,
     };
   }, [totalMainDishes, totalTopping]);
 
@@ -391,7 +407,7 @@ const HostView = () => {
         }}
       >
         <div style={{ flex: 1, fontSize: 16 }}>
-          Phô mai lát: {totalWeight.pho_mai_lat} g
+          Phô mai lát: {totalWeight.pho_mai_lat.toFixed(0)} g
         </div>
         <div style={{ flex: 1, fontSize: 16 }}>
           Phô mai sợi: {totalWeight.pho_mai_soi} g
@@ -401,6 +417,7 @@ const HostView = () => {
         style={{
           display: "flex",
           justifyContent: "space-between",
+          marginBottom: 16,
         }}
       >
         <div style={{ flex: 1, fontSize: 16 }}>
@@ -408,6 +425,33 @@ const HostView = () => {
         </div>
         <div style={{ flex: 1, fontSize: 16 }}>
           Gà popcorn: {totalWeight.ga_popcorn} g
+        </div>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: 16,
+        }}
+      >
+        <div style={{ flex: 1, fontSize: 16 }}>
+          Mì Gạo Lứt: {totalWeight.mi_gao_lut} g
+        </div>
+        <div style={{ flex: 1, fontSize: 16 }}>
+          Gà Vòng: {totalWeight.ga_vong} vòng
+        </div>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <div style={{ flex: 1, fontSize: 16 }}>
+          Nhện đen: {totalWeight.nhen_den} cái
+        </div>
+        <div style={{ flex: 1, fontSize: 16 }}>
+          Xúc xích zombie: {totalWeight.xuc_xich_zombie} con
         </div>
       </div>
 
