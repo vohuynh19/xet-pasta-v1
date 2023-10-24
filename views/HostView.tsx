@@ -236,13 +236,13 @@ const HostView = () => {
       totalMainDishes.xet_nhen_nhen * 200 +
       totalMainDishes.xet_ai_cap * 200;
     const sot =
-      totalMainDishes.xet_truyen_thong_M * 90 +
-      totalMainDishes.xet_truyen_thong_L * 110 +
-      totalMainDishes.xet_tan_chay_M * 90 +
-      totalMainDishes.xet_tan_chay_L * 110 +
-      totalMainDishes.xet_zombie * 90 +
-      totalMainDishes.xet_nhen_nhen * 110 +
-      totalMainDishes.xet_ai_cap * 110;
+      totalMainDishes.xet_truyen_thong_M * 80 +
+      totalMainDishes.xet_truyen_thong_L * 100 +
+      totalMainDishes.xet_tan_chay_M * 80 +
+      totalMainDishes.xet_tan_chay_L * 100 +
+      totalMainDishes.xet_zombie * 80 +
+      totalMainDishes.xet_nhen_nhen * 100 +
+      totalMainDishes.xet_ai_cap * 100;
 
     const xuc_xich = totalTopping.xuc_xich * 25;
     const pho_mai_lat =
