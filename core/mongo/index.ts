@@ -6,5 +6,6 @@ export const connectMongoDb = async () => {
     console.log("Mongo DB connected success");
   } catch (error) {
     console.log("Mongo DB connected failed");
+    console.log("process.env.MONGODB_URI", process.env.MONGODB_URI);
   }
 };
