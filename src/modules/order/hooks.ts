@@ -19,6 +19,7 @@ import {
   getCollection,
   orderCollection,
 } from "src/infra/firebase";
+import { axiosInstance } from "src/infra/https";
 
 type OrderFilterType =
   | "ALL"
@@ -152,8 +153,6 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
                 } as OrderSchema)
             )
             .filter((order) => {
-              console.log("order", order);
-
               const orderDate = moment(
                 moment(order.createdAt).format("YYYY-MM-DD")
               );
@@ -232,6 +231,20 @@ export const useOrders = (type: OrderFilterType, fetchOnMount = true) => {
   };
 };
 
+function removeDuplicates(records: OrderSchema[]): OrderSchema[] {
+  const uniqueIds = new Set<string>();
+  const result: OrderSchema[] = [];
+
+  for (const record of records) {
+    if (!uniqueIds.has(record.id || "")) {
+      uniqueIds.add(record.id || "");
+      result.push(record);
+    }
+  }
+
+  return result;
+}
+
 export const useOrdersFilter = (
   type: OrderFilterType,
   startDate: string,
@@ -239,95 +252,24 @@ export const useOrdersFilter = (
   fetchOnMount = true
 ) => {
   const request = async () => {
-    switch (type) {
-      case "ALL_DONE_MORNING":
-        return getDocs(
-          query(
-            orderCollection,
-            // orderBy("createdAt", "desc"),
-            // where("createdAt", "<=", endDate),
-            // where("createdAt", ">=", startDate),
-            limit(200)
-          )
-        ).then((data) => {
-          return data.docs
-            .map(
-              (val) =>
-                ({
-                  ...val.data(),
-                  id: val.id,
-                } as OrderSchema)
-            )
-            .filter((order) => {
-              const orderTime = moment(order.createdAt);
-              const maxTime = moment(
-                `${moment(order.createdAt).format("YYYY-MM-DD")} 11:00`
-              );
-              return maxTime.isAfter(orderTime) && order.status === "DONE";
-            });
-        });
+    const data = (await axiosInstance
+      .post("/api/get-order", {
+        firebaseCreatedAt: {
+          $gte: startDate,
+          $lte: endDate,
+        },
+      })
+      .then((res) =>
+        res.data.map((record: any) => ({
+          ...record,
+          createdAt: record.firebaseCreatedAt,
+          updatedAt: record.firebaseUpdatedAt,
+        }))
+      )) as OrderSchema[];
 
-      case "ALL_DONE_EVENING":
-        return getDocs(
-          query(
-            orderCollection,
-            // orderBy("createdAt", "desc"),
-            // where("createdAt", "<=", endDate),
-            // where("createdAt", ">=", startDate),
-            limit(200)
-          )
-        ).then((data) => {
-          return data.docs
-            .map(
-              (val) =>
-                ({
-                  ...val.data(),
-                  id: val.id,
-                } as OrderSchema)
-            )
-            .filter((order) => {
-              const minTime = moment(
-                `${moment(order.createdAt).format("YYYY-MM-DD")} 15:00`
-              );
-              const orderTime = moment(order.createdAt);
-              const maxTime = moment(
-                `${moment(order.createdAt).format("YYYY-MM-DD")} 23:00`
-              );
+    const fil = data.filter((record) => record.status === "DONE");
 
-              return (
-                minTime.isBefore(orderTime) &&
-                maxTime.isAfter(orderTime) &&
-                order.status === "DONE"
-              );
-            });
-        });
-
-      case "ALL_DONE_TODAY":
-        return getDocs(
-          query(
-            orderCollection,
-            // orderBy("createdAt", "desc"),
-            // where("createdAt", "<=", endDate),
-            // where("createdAt", ">=", startDate),
-            limit(200)
-          )
-        ).then((data) => {
-          return data.docs
-            .map(
-              (val) =>
-                ({
-                  ...val.data(),
-                  id: val.id,
-                } as OrderSchema)
-            )
-            .filter((order) => {
-              return order.status === "DONE";
-            });
-        });
-
-      default:
-        throw Error("Not supported");
-    }
+    return removeDuplicates(fil);
   };
 
   const { data, isLoading, error, refetch } = useQuery({

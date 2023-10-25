@@ -23,7 +23,7 @@ import {
   Legend,
   ArcElement,
 } from "chart.js";
-import { Logout } from "@mui/icons-material";
+import { DataThresholdingOutlined, Logout } from "@mui/icons-material";
 import { signOut } from "firebase/auth";
 import { auth } from "src/infra/firebase";
 
@@ -40,8 +40,9 @@ ChartJS.register(
 const HostView = () => {
   const [time, setTime] = useState<"all" | "morning" | "evening">("all");
   const [dateRange, setDateRage] = useState<string[]>();
+  const [isStat, setIsStat] = useState(false);
 
-  const { orders, isLoading } = useOrders(
+  const { orders: todayOrders, isLoading } = useOrders(
     time === "all"
       ? "ALL_DONE_TODAY"
       : time === "morning"
@@ -50,6 +51,20 @@ const HostView = () => {
     // dateRange?.[0] || "",
     // dateRange?.[1] || ""
   );
+
+  const { orders: statOrders } = useOrdersFilter(
+    time === "all"
+      ? "ALL_DONE_TODAY"
+      : time === "morning"
+      ? "ALL_DONE_MORNING"
+      : "ALL_DONE_EVENING",
+    dateRange?.[0] || "",
+    dateRange?.[1] || ""
+  );
+
+  const orders = isStat ? statOrders || [] : todayOrders || [];
+
+  console.log("orders", orders);
 
   //
   // Total receive &  Total revenue chart
@@ -61,6 +76,7 @@ const HostView = () => {
     if (current.paymentMethod !== "cash") {
       return prev;
     }
+
     return (prev = prev + current.totalPrice);
   }, 0);
 
@@ -81,25 +97,39 @@ const HostView = () => {
           return {
             xet_truyen_thong_M:
               p.xet_truyen_thong_M +
-              (c.size === "M" && c.name === "xet_truyen_thong" ? c.amount : 0),
+              (c.size === "M" && c.name === "xet_truyen_thong"
+                ? Number(c.amount)
+                : 0),
             xet_truyen_thong_L:
               p.xet_truyen_thong_L +
-              (c.size === "L" && c.name === "xet_truyen_thong" ? c.amount : 0),
+              (c.size === "L" && c.name === "xet_truyen_thong"
+                ? Number(c.amount)
+                : 0),
             xet_tan_chay_M:
               p.xet_tan_chay_M +
-              (c.size === "M" && c.name === "xet_tan_chay" ? c.amount : 0),
+              (c.size === "M" && c.name === "xet_tan_chay"
+                ? Number(c.amount)
+                : 0),
             xet_tan_chay_L:
               p.xet_tan_chay_L +
-              (c.size === "L" && c.name === "xet_tan_chay" ? c.amount : 0),
+              (c.size === "L" && c.name === "xet_tan_chay"
+                ? Number(c.amount)
+                : 0),
             xet_ai_cap:
               p.xet_ai_cap +
-              (c.size === "M" && c.name === "xet_ai_cap" ? c.amount : 0),
+              (c.size === "M" && c.name === "xet_ai_cap"
+                ? Number(c.amount)
+                : 0),
             xet_nhen_nhen:
               p.xet_nhen_nhen +
-              (c.size === "M" && c.name === "xet_nhen_nhen" ? c.amount : 0),
+              (c.size === "M" && c.name === "xet_nhen_nhen"
+                ? Number(c.amount)
+                : 0),
             xet_zombie:
               p.xet_zombie +
-              (c.size === "M" && c.name === "xet_zombie" ? c.amount : 0),
+              (c.size === "M" && c.name === "xet_zombie"
+                ? Number(c.amount)
+                : 0),
           };
         },
         {
@@ -135,6 +165,8 @@ const HostView = () => {
     }
   );
 
+  console.log("totalMainDishes", totalMainDishes);
+
   // Topping
   // Topping amount
   const totalTopping: Record<ToppingName, number> = (orders || []).reduce(
@@ -146,13 +178,15 @@ const HostView = () => {
           }
 
           return {
-            xuc_xich: p.xuc_xich + (c.toppings?.xuc_xich || 0) * c.amount,
+            xuc_xich:
+              p.xuc_xich + (c.toppings?.xuc_xich || 0) * Number(c.amount),
             pho_mai_lat:
-              p.pho_mai_lat + (c.toppings?.pho_mai_lat || 0) * c.amount,
+              p.pho_mai_lat + (c.toppings?.pho_mai_lat || 0) * Number(c.amount),
             pho_mai_soi:
-              p.pho_mai_soi + (c.toppings?.pho_mai_soi || 0) * c.amount,
-            xa_lach: p.xa_lach + (c.toppings?.xa_lach || 0) * c.amount,
-            ga_popcorn: p.ga_popcorn + (c.toppings?.ga_popcorn || 0) * c.amount,
+              p.pho_mai_soi + (c.toppings?.pho_mai_soi || 0) * Number(c.amount),
+            xa_lach: p.xa_lach + (c.toppings?.xa_lach || 0) * Number(c.amount),
+            ga_popcorn:
+              p.ga_popcorn + (c.toppings?.ga_popcorn || 0) * Number(c.amount),
           };
         },
         {
@@ -281,75 +315,100 @@ const HostView = () => {
     };
   }, [totalMainDishes, totalTopping]);
 
+  const toggleStat = () => setIsStat(!isStat);
+
   return (
     <div
       style={{
         padding: 16,
       }}
     >
-      <div style={{ marginBottom: 8 }}>
-        <span onClick={logout}>
-          <Logout />
-        </span>
-      </div>
-      {/* <RangePicker
-        size="large"
-        showTime={{ format: "HH:mm" }}
-        format="YYYY-MM-DD HH:mm"
-        onChange={onChange}
-        onOk={onOk}
-      /> */}
       <div
         style={{
-          // marginTop: 16,
+          marginBottom: 8,
           display: "flex",
+          justifyContent: "space-between",
         }}
       >
-        <div
-          style={{
-            flex: 1,
-            cursor: "pointer",
-            textAlign: "center",
-            backgroundColor:
-              time === "all" ? theme.colors.primary : theme.colors.white,
-            color: time === "all" ? theme.colors.white : theme.colors.secondary,
-            padding: "16px 0",
-          }}
-          onClick={() => setTime("all")}
-        >
-          Cả ngày
+        <div onClick={logout}>
+          <Logout />
         </div>
+
         <div
+          onClick={toggleStat}
           style={{
-            flex: 1,
             cursor: "pointer",
-            textAlign: "center",
-            backgroundColor:
-              time === "morning" ? theme.colors.primary : theme.colors.white,
-            color:
-              time === "morning" ? theme.colors.white : theme.colors.secondary,
-            padding: "16px 0",
           }}
-          onClick={() => setTime("morning")}
         >
-          Sáng
-        </div>
-        <div
-          style={{
-            flex: 1,
-            cursor: "pointer",
-            textAlign: "center",
-            backgroundColor:
-              time === "evening" ? theme.colors.primary : theme.colors.white,
-            color:
-              time === "evening" ? theme.colors.white : theme.colors.secondary,
-            padding: "16px 0",
-          }}
-          onClick={() => setTime("evening")}
-        >
-          Chiều
+          <DataThresholdingOutlined />
         </div>
       </div>
+      {isStat ? (
+        <RangePicker
+          size="large"
+          showTime={{ format: "HH:mm" }}
+          format="YYYY-MM-DD HH:mm"
+          onChange={onChange}
+          onOk={onOk}
+        />
+      ) : (
+        <div
+          style={{
+            marginTop: 16,
+            display: "flex",
+          }}
+        >
+          <div
+            style={{
+              flex: 1,
+              cursor: "pointer",
+              textAlign: "center",
+              backgroundColor:
+                time === "all" ? theme.colors.primary : theme.colors.white,
+              color:
+                time === "all" ? theme.colors.white : theme.colors.secondary,
+              padding: "16px 0",
+            }}
+            onClick={() => setTime("all")}
+          >
+            Cả ngày
+          </div>
+          <div
+            style={{
+              flex: 1,
+              cursor: "pointer",
+              textAlign: "center",
+              backgroundColor:
+                time === "morning" ? theme.colors.primary : theme.colors.white,
+              color:
+                time === "morning"
+                  ? theme.colors.white
+                  : theme.colors.secondary,
+              padding: "16px 0",
+            }}
+            onClick={() => setTime("morning")}
+          >
+            Sáng
+          </div>
+          <div
+            style={{
+              flex: 1,
+              cursor: "pointer",
+              textAlign: "center",
+              backgroundColor:
+                time === "evening" ? theme.colors.primary : theme.colors.white,
+              color:
+                time === "evening"
+                  ? theme.colors.white
+                  : theme.colors.secondary,
+              padding: "16px 0",
+            }}
+            onClick={() => setTime("evening")}
+          >
+            Chiều
+          </div>
+        </div>
+      )}
 
       <Divider />
 
